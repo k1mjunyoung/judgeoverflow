@@ -1,3 +1,32 @@
 spring:
   application:
     name: judgeoverflow
+
+  # Security
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ENC(sT5b+p+AxJNQUu2s82LfB8oyTU+zH1OTUdQcbPizcrZ2NAsICmGkz/mHhz8tMn1OJODvzB5kz6v95y7GLGUm2l87WlmPlXiDC1roADdhE3U=)
+            client-secret: ENC(7tXgwBtOYWmaAP8jqalGALBfxtLIfZnzEUWsS6mIShz5NAvABONfRxRv9oOv6E+1)
+          github:
+            client-id: ENC(gnaMlgyhtzKK0a2fRCP+y7bniBtja5FbhH2NL+bD/+4=)
+            client-secret: ENC(tQ6672CsqA2+vKy6iXuRmi8bOGjgKy0fkVv3nkshRFE0s8VBmk8+ovY+eIJ1MmrO4ovPOhtzMb0=)
+
+  # DB
+  datasource:
+    url: jdbc:postgresql://localhost:5432/judgeoverflow
+    username: ENC(xrZSYxAwYBYDtP8kL+dhrqIYa+xKL5DF)
+    password: ENC(fN1+BOHdDcK5vEnIonKxWkd2mXe/NjkkgQIoQyn+Ce4=)
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
