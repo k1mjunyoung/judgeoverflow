@@ -27,7 +27,11 @@ public class OAuthAttributes {
         if ("github".equals(registrationId)) {
             return ofGithub(userNameAttributeName, attributes);
         }
-        return ofGoogle(userNameAttributeName, attributes);
+        if ("google".equals(registrationId)) {
+            return ofGoogle(userNameAttributeName, attributes);
+        }
+//        return ofGoogle(userNameAttributeName, attributes);
+        throw new IllegalArgumentException("지원하지 않는 OAuth 제공자입니다: " + registrationId);
     }
 
     private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
@@ -68,6 +72,9 @@ public class OAuthAttributes {
 
 
     public Committer toEntity() {
+        if (name == null || name.isBlank()) {
+            throw new IllegalStateException("이름은 필수 항목입니다. OAuth 제공자로부터 이름을 받지 못했습니다.");
+        }
         if (email == null || email.isBlank()) {
             throw new IllegalStateException("이메일은 필수 항목입니다. OAuth 제공자로부터 이메일을 받지 못했습니다.");
         }
