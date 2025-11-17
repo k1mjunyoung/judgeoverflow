@@ -1,6 +1,7 @@
 package judgeoverflow.config;
 
 import judgeoverflow.service.CustomOAuth2UserService;
+import judgeoverflow.service.CustomOidcUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomOidcUserService customOidcUserService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -28,7 +30,8 @@ public class SecurityConfig {
                 .oauth2Login(oauth2Login -> oauth2Login
                         .defaultSuccessUrl("/")
                         .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
-                                .userService(customOAuth2UserService) // 커스텀 서비스 등록
+                                .userService(customOAuth2UserService) // OAuth
+                                .oidcUserService(customOidcUserService) // Google OIDC
                         )
                 );
         return http.build();

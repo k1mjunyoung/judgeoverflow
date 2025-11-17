@@ -8,60 +8,72 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
-public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+public class CustomOidcUserService implements OAuth2UserService<OidcUserRequest, OidcUser> {
 
-    private static final Logger log = LoggerFactory.getLogger(CustomOAuth2UserService.class);
+    private static final Logger log = LoggerFactory.getLogger(CustomOidcUserService.class);
     private final CommitterRepository committerRepository;
 
     @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        log.info("CustomOAuth2UserService.loadUser: registrationId={}",
+    public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
+        log.info("CustomOidcUserService.loadUser: clientRegistrationId={}",
                 userRequest.getClientRegistration().getRegistrationId());
-        OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
-        OAuth2User oAuth2User = delegate.loadUser(userRequest);
+
+        // 기본 OidcUserService에 위임해서 사용자 정보(ID 토큰 + UserInfo) 가져오기
+        OidcUserService delegate = new OidcUserService();
+        OidcUser oidcUser = delegate.loadUser(userRequest);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
+        String userNameAttributeName =
+                userRequest.getClientRegistration().getProviderDetails()
+                        .getUserInfoEndpoint()
+                        .getUserNameAttributeName();
 
-        OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
+        OAuthAttributes attributes = OAuthAttributes.of(
+                registrationId,
+                userNameAttributeName,
+                oidcUser.getAttributes()
+        );
 
         Committer user = saveOrUpdate(attributes);
-
-        // 세션에 사용자 정보를 저장하는 로직은 여기에 추가할 수 있습니다.
-        // httpSession.setAttribute("user", new SessionUser(user));
 
         String authority = user.getRole().name();
         if (!authority.startsWith("ROLE_")) {
             authority = "ROLE_" + authority;
         }
-        return new DefaultOAuth2User(
+
+        return new DefaultOidcUser(
                 Collections.singleton(new SimpleGrantedAuthority(authority)),
-                attributes.getAttributes(),
-                attributes.getNameAttributeKey());
+                oidcUser.getIdToken(),
+                oidcUser.getUserInfo(),
+                attributes.getNameAttributeKey()
+        );
     }
 
     private Committer saveOrUpdate(OAuthAttributes attributes) {
-        log.info("CustomOAuth2UserService.saveOrUpdate: email={}", attributes.getEmail());
+        log.info("CustomOidcUserService.saveOrUpdate: email={}", attributes.getEmail());
+
         String email = attributes.getEmail();
         if (!StringUtils.hasText(email)) {
             throw new OAuth2AuthenticationException("OAuth 제공자에서 이메일을 반환하지 않았습니다. OAuth 앱 설정에서 user:email scope를 요청해야 합니다.");
         }
+
         Committer committer = committerRepository.findByEmail(email)
                 .map(entity -> entity.update(attributes.getName(), attributes.getPicture(), attributes.getEmail()))
                 .orElse(attributes.toEntity());
+
         Committer saved = committerRepository.save(committer);
-        log.info("CustomOAuth2UserService.saveOrUpdate: committer saved id={}", saved.getId());
+        log.info("CustomOidcUserService.saveOrUpdate: committer saved id={}", saved.getId());
         return saved;
     }
 }

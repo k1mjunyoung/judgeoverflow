@@ -23,6 +23,7 @@ public class Committer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
     private String username;
 
     @Column(nullable = false)
@@ -31,6 +32,7 @@ public class Committer {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column
     private String profileImage;
 
     @Enumerated(EnumType.STRING)
