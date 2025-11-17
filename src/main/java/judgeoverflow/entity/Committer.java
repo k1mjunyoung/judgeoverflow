@@ -29,7 +29,7 @@ public class Committer {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     private String profileImage;
@@ -38,9 +38,10 @@ public class Committer {
     @Column(nullable = false)
     private CommitterRole role;
 
-    public Committer update(String name, String profileImage) {
+    public Committer update(String name, String profileImage, String email) {
         this.name = name;
         this.profileImage = profileImage;
+        this.email = email;
         return this;
     }
 }
