@@ -1,10 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>JudgeOverFlow</title>
 </head>
 <body>
-    <h1>Welcome to JudgeOverFlow!</h1>
+<h1>Welcome to JudgeOverFlow!</h1>
+<div sec:authorize="isAuthenticated()">
+    <p>환영합니다, <span sec:authentication="name">사용자</span>님!</p>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">로그아웃</button>
+    </form>
+</div>
+<div sec:authorize="!isAuthenticated()">
+    <p>로그인하여 서비스를 이용하세요.</p>
+    <a th:href="@{/oauth2/authorization/google}">Google 로그인</a>
+    <a th:href="@{/oauth2/authorization/github}">GitHub 로그인</a>
+</div>
 </body>
 </html>

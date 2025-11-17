@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +43,11 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     }
 
     private Committer saveOrUpdate(OAuthAttributes attributes) {
-        Committer committer = committerRepository.findByEmail(attributes.getEmail())
+        String email = attributes.getEmail();
+        if (!StringUtils.hasText(email)) {
+            throw new OAuth2AuthenticationException("GitHub에서 이메일을 반환하지 않았습니다. user:email scope를 요청하고 /user/emails에서 primary 이메일을 조회하는 보강이 필요합니다.");
+        }
+        Committer committer = committerRepository.findByEmail(email)
                 .map(entity -> entity.update(attributes.getName(), attributes.getPicture()))
                 .orElse(attributes.toEntity());
 

@@ -31,9 +31,13 @@ public class OAuthAttributes {
     }
 
     private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
+        String email = (String) attributes.get("email");
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("GitHub에서 이메일을 제공하지 않았습니다. OAuth 앱 설정에서 user:email scope를 요청해야 합니다.");
+        }
         return OAuthAttributes.builder()
                 .name((String) attributes.get("name"))
-                .email((String) attributes.get("email"))
+                .email(email)
                 .picture((String) attributes.get("picture"))
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
@@ -52,6 +56,9 @@ public class OAuthAttributes {
 
 
     public Committer toEntity() {
+        if (email == null || email.isBlank()) {
+            throw new IllegalStateException("이메일은 필수 항목입니다. OAuth 제공자로부터 이메일을 받지 못했습니다.");
+        }
         return Committer.builder()
                 .name(name)
                 .email(email)

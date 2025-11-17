@@ -8,17 +8,19 @@ spring:
       client:
         registration:
           google:
-            client-id: ENC(sT5b+p+AxJNQUu2s82LfB8oyTU+zH1OTUdQcbPizcrZ2NAsICmGkz/mHhz8tMn1OJODvzB5kz6v95y7GLGUm2l87WlmPlXiDC1roADdhE3U=)
-            client-secret: ENC(7tXgwBtOYWmaAP8jqalGALBfxtLIfZnzEUWsS6mIShz5NAvABONfRxRv9oOv6E+1)
+            client-id: ENC(a1ZwUcY0/bhNoUXklI+AAN5S6UH9Ou6C5BwIHMUa7kBiCaeiPBug5aDAdhDmLfsCKFYc+TQRdXUiyz1OERxgl3PIq66At8BYa4sPpUFnt9jSmBaObWPa+8SLJvpeDlMbkEgqXJhJ5WlkQbCBLycfLw==)
+            client-secret: ENC(pvII7YF9JYTHc/CwFhyOBfgCm60R3hjSMEl26Y1K6r7lg/LRwBeUQKHMQpvH8xBgojbaOTnfzsBkk/IssI33qMBvjYU1arac9dA0G14v80M=)
           github:
-            client-id: ENC(gnaMlgyhtzKK0a2fRCP+y7bniBtja5FbhH2NL+bD/+4=)
-            client-secret: ENC(tQ6672CsqA2+vKy6iXuRmi8bOGjgKy0fkVv3nkshRFE0s8VBmk8+ovY+eIJ1MmrO4ovPOhtzMb0=)
+            client-id: ENC(+uvt50eXMLftMwES9Z8iRxmJoA1hquNZpJEHwkusaiEyEoDgcdrec/w6/JOb9bExBN0eonGHcvA3N+HdWet7zQ==)
+            client-secret: ENC(9EYDzWTL+RG+XgfTIjZwZQgu7q6MoENNPBezk6SJlEr5wiJKZW77Scbr6FVRDZds9AJOzNpi5fCe5SuYkncg2QwCjMbaVPewR8nUWpaCxpQ=)
+            scope:
+              - user:email
 
   # DB
   datasource:
     url: jdbc:postgresql://localhost:5432/judgeoverflow
-    username: ENC(xrZSYxAwYBYDtP8kL+dhrqIYa+xKL5DF)
-    password: ENC(fN1+BOHdDcK5vEnIonKxWkd2mXe/NjkkgQIoQyn+Ce4=)
+    username: ENC(zi2rzPiqq7WKfbVD4rhFbIzFx8SqMHMiTXUpZQjhXVveY/2xjm05LJxnM+GEVrSP)
+    password: ENC(J8GMrasqQQ1hYC0fSJmMS65nVa6LcEwmMTb/p+Jtc6r0z4NkDCvv7nZ9XmOYRzcJ8fF2EtDFQfxNIyzEvZQStA==)
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
