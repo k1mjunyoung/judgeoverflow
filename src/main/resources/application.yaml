@@ -1,7 +1,6 @@
 spring:
   application:
     name: judgeoverflow
-
   # Security
   security:
     oauth2:
@@ -15,7 +14,6 @@ spring:
             client-secret: ENC(9EYDzWTL+RG+XgfTIjZwZQgu7q6MoENNPBezk6SJlEr5wiJKZW77Scbr6FVRDZds9AJOzNpi5fCe5SuYkncg2QwCjMbaVPewR8nUWpaCxpQ=)
             scope:
               - user:email
-
   # DB
   datasource:
     url: jdbc:postgresql://localhost:5432/judgeoverflow
@@ -32,3 +30,7 @@ spring:
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor
+
+#logging:
+#  level:
+#    org.springframework.security: DEBUG
