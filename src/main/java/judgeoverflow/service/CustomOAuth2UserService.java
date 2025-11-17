@@ -49,7 +49,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     private Committer saveOrUpdate(OAuthAttributes attributes) {
         String email = attributes.getEmail();
         if (!StringUtils.hasText(email)) {
-            throw new OAuth2AuthenticationException("GitHub에서 이메일을 반환하지 않았습니다. user:email scope를 요청하고 /user/emails에서 primary 이메일을 조회하는 보강이 필요합니다.");
+            throw new OAuth2AuthenticationException("OAuth 제공자에서 이메일을 반환하지 않았습니다. OAuth 앱 설정에서 user:email scope를 요청해야 합니다.");
         }
         Committer committer = committerRepository.findByEmail(email)
                 .map(entity -> entity.update(attributes.getName(), attributes.getPicture(), attributes.getEmail()))
