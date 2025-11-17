@@ -30,7 +30,6 @@ public class OAuthAttributes {
         if ("google".equals(registrationId)) {
             return ofGoogle(userNameAttributeName, attributes);
         }
-//        return ofGoogle(userNameAttributeName, attributes);
         throw new IllegalArgumentException("지원하지 않는 OAuth 제공자입니다: " + registrationId);
     }
 
